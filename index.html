@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quantom - Fast Food Management Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <div class="wrapper">
+    <!-- Sidebar -->
+    <nav id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <div class="logo-icon">
+            <img src="assets/image/quantom-icon.png" alt="Quantom">
+          </div>
+        </div>
+        <button id="sidebarToggle" class="btn toggle-btn d-lg-none">
+          <i class="fas fa-bars"></i>
+        </button>
+        <button class="btn sidebar-close-btn" onclick="closeSidebar()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="sidebar-menu">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link active" href="#" data-page="dashboard">
+              <i class="fas fa-th-large"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="orders">
+              <i class="fas fa-shopping-bag"></i>
+              <span>Orders</span>
+              <span class="badge bg-warning text-dark" id="orderBadge">0</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="crews">
+              <i class="fas fa-users"></i>
+              <span>Crews</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="customers">
+              <i class="fas fa-user-friends"></i>
+              <span>Customers</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="inventory">
+              <i class="fas fa-boxes"></i>
+              <span>Inventory</span>
+              <span class="badge bg-danger" id="inventoryBadge">0</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="suppliers">
+              <i class="fas fa-truck"></i>
+              <span>Suppliers</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="purchases">
+              <i class="fas fa-shopping-cart"></i>
+              <span>Supplier Purchases</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="menu">
+              <i class="fas fa-hamburger"></i>
+              <span>Menu</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-page="promotions">
+              <i class="fas fa-tag"></i>
+              <span>Promotions</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <div class="user-avatar">M</div>
+          <div class="user-details">
+            <span class="user-name">Manager</span>
+            <span class="user-role">Admin</span>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div id="content" class="content">
+      <!-- Topbar -->
+      <nav class="topbar">
+        <div class="topbar-left">
+          <button id="sidebarCollapse" class="btn">
+            <i class="fas fa-bars"></i>
+          </button>
+          <h4 class="page-title" id="pageTitle">Dashboard</h4>
+        </div>
+        <div class="topbar-right">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search..." id="globalSearch">
+          </div>
+          <div class="topbar-icons">
+            <button class="btn btn-notification" id="notificationBtn">
+              <i class="fas fa-bell"></i>
+              <span class="notification-dot"></span>
+            </button>
+            <button class="btn btn-settings" onclick="toggleSettings()">
+              <i class="fas fa-cog"></i>
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Notification Panel -->
+      <div class="notification-panel" id="notificationPanel">
+        <div class="notification-header">
+          <h6>Notifications</h6>
+          <button class="btn btn-sm" onclick="document.getElementById('notificationPanel').classList.remove('show')">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="notification-list">
+          <div class="notification-item" onclick="navigateTo('inventory'); document.getElementById('notificationPanel').classList.remove('show');">
+            <i class="fas fa-exclamation-triangle notification-icon-warning"></i>
+            <div class="notification-content">
+              <div class="notification-title">Low Stock Alert</div>
+              <div class="notification-text">Chicken Breast is below alert level (45 in stock)</div>
+              <div class="notification-time">Just now</div>
+            </div>
+          </div>
+          <div class="notification-item" onclick="navigateTo('orders'); document.getElementById('notificationPanel').classList.remove('show');">
+            <i class="fas fa-shopping-bag notification-icon-success"></i>
+            <div class="notification-content">
+              <div class="notification-title">New Orders</div>
+              <div class="notification-text">3 new pending orders waiting to be processed</div>
+              <div class="notification-time">5 min ago</div>
+            </div>
+          </div>
+          <div class="notification-item" onclick="navigateTo('inventory'); document.getElementById('notificationPanel').classList.remove('show');">
+            <i class="fas fa-info-circle notification-icon-info"></i>
+            <div class="notification-content">
+              <div class="notification-title">Inventory Restocked</div>
+              <div class="notification-text">Burger Bun stock updated to 200 units</div>
+              <div class="notification-time">1 hour ago</div>
+            </div>
+          </div>
+          <div class="notification-item" onclick="navigateTo('orders'); document.getElementById('notificationPanel').classList.remove('show');">
+            <i class="fas fa-check-circle notification-icon-success"></i>
+            <div class="notification-content">
+              <div class="notification-title">Orders Completed</div>
+              <div class="notification-text">12 orders completed today successfully</div>
+              <div class="notification-time">2 hours ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pages Container -->
+      <div class="pages-container">
+        <!-- DASHBOARD PAGE -->
+        <div id="dashboard" class="page active">
+          <div class="row g-4">
+            <!-- KPI Cards -->
+            <div class="col-xl-3 col-md-6">
+              <div class="kpi-card">
+                <div class="kpi-icon kpi-orange">
+                  <i class="fas fa-shopping-bag"></i>
+                </div>
+                <div class="kpi-info">
+                  <span class="kpi-label">Today's Orders</span>
+                  <h3 class="kpi-value" id="todayOrders">0</h3>
+                  <span class="kpi-change positive">
+                    <i class="fas fa-arrow-up"></i> <span id="ordersChange">0%</span> vs yesterday
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+              <div class="kpi-card">
+                <div class="kpi-icon kpi-yellow">
+                  <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <div class="kpi-info">
+                  <span class="kpi-label">Today's Revenue</span>
+                  <h3 class="kpi-value" id="todayRevenue">Rp 0</h3>
+                  <span class="kpi-change positive">
+                    <i class="fas fa-arrow-up"></i> <span id="revenueChange">0%</span> vs yesterday
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+              <div class="kpi-card">
+                <div class="kpi-icon kpi-orange">
+                  <i class="fas fa-users"></i>
+                </div>
+                <div class="kpi-info">
+                  <span class="kpi-label">Active Customers</span>
+                  <h3 class="kpi-value" id="activeCustomers">0</h3>
+                  <span class="kpi-change positive">
+                    <i class="fas fa-arrow-up"></i> <span id="customersChange">0%</span> this week
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+              <div class="kpi-card">
+                <div class="kpi-icon kpi-yellow">
+                  <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="kpi-info">
+                  <span class="kpi-label">Low Stock Items</span>
+                  <h3 class="kpi-value" id="lowStockCount">0</h3>
+                  <span class="kpi-change negative">
+                    <i class="fas fa-exclamation-circle"></i> Needs attention
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-4 mt-2">
+            <!-- Revenue Chart -->
+            <div class="col-lg-8">
+              <div class="card dashboard-card">
+                <div class="card-header">
+                  <h5><i class="fas fa-chart-line"></i> Revenue Overview</h5>
+                  <select class="form-select form-select-sm" id="revenuePeriod" style="width:120px">
+                    <option value="7">Last 7 Days</option>
+                    <option value="30">Last 30 Days</option>
+                    <option value="90">Last 3 Months</option>
+                  </select>
+                </div>
+                <div class="card-body">
+                  <canvas id="revenueChart" height="80"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="card dashboard-card">
+                <div class="card-header">
+                  <h5><i class="fas fa-chart-pie"></i> Order Status</h5>
+                </div>
+                <div class="card-body">
+                  <canvas id="orderStatusChart" height="150"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-4 mt-2">
+            <div class="col-lg-6">
+              <div class="card dashboard-card">
+                <div class="card-header">
+                  <h5><i class="fas fa-fire"></i> Top Selling Items</h5>
+                </div>
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0" id="topItemsTable">
+                      <thead>
+                        <tr><th>#</th><th>Item</th><th>Sold</th><th>Revenue</th></tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="card dashboard-card">
+                <div class="card-header">
+                  <h5><i class="fas fa-clock"></i> Recent Orders</h5>
+                  <a href="#" class="view-all" data-page="orders">View All</a>
+                </div>
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0" id="recentOrdersTable">
+                      <thead>
+                        <tr><th>Order #</th><th>Customer</th><th>Total</th><th>Status</th></tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-4 mt-2">
+            <div class="col-lg-6">
+            </div>
+            <div class="col-lg-6">
+            </div>
+          </div>
+        </div>
+
+        <!-- ORDERS PAGE -->
+        <div id="orders" class="page">
+          <div class="row g-4">
+            <div class="col-12">
+              <div class="card dashboard-card">
+                <div class="card-header">
+                  <h5><i class="fas fa-shopping-bag"></i> All Orders</h5>
+                  <div class="header-actions">
+                    <select class="form-select form-select-sm me-2" id="orderStatusFilter" style="width:150px">
+                      <option value="">All Status</option>
+                      <option value="Pending">Pending</option>
+                      <option value="Preparing">Preparing</option>
+                      <option value="Completed">Completed</option>
+                      <option value="Cancelled">Cancelled</option>
+                    </select>
+                    <input type="text" class="form-control form-control-sm me-2" id="orderSearch" placeholder="Search orders..." style="width:200px">
+                    <button class="btn btn-primary btn-sm" onclick="openAddOrderModal()">
+                      <i class="fas fa-plus"></i> Add Order
+                    </button>
+                  </div>
+                </div>
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0" id="ordersTable">
+                      <thead>
+                        <tr>
+                          <th>Order #</th>
+                          <th>Customer</th>
+                          <th>Items</th>
+                          <th>Total</th>
+                          <th>Date</th>
+                          <th>Status</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                  <div class="pagination-container">
+                    <span id="ordersPaginationInfo"></span>
+                    <div class="btn-group" id="ordersPagination"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CREWS PAGE -->
+        <div id="crews" class="page">
+          <div class="row g-4">
+            <div class="col-12">
+              <div class="card dashboard-card">
+                <div class="card-header">
+                  <h5><i class="fas fa-users"></i> Crew Members</h5>
+                  <div class="header-actions">
+                    <input type="text" class="form-control form-control-sm me-2" id="crewSearch" placeholder="Search crew..." style="width:200px">
+                    <button class="btn btn-primary btn-sm" onclick="openAddCrewModal()">
+                      <i class="fas fa-plus"></i> Add Crew
+                    </button>
+                  </div>
+                </div>
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0" id="crewsTable">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Name</th>
+                          <th>Position</th>
+                          <th>Phone</th>
+                          <th>Store</th>
+                          <th>Schedule</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CUSTOMERS PAGE -->
+        <div id="customers" class="page">
+          <div class="row g-4">
+            <div class="col-12">
+              <div class="card dashboard-card">
+                <div class="card-header">
+                  <h5><i class="fas fa-user-friends"></i> Customers</h5>
+                  <div class="header-actions">
+                    <input type="text" class="form-control form-control-sm me-2" id="customerSearch" placeholder="Search customers..." style="width:200px">
+                    <button class="btn btn-primary btn-sm" onclick="openAddCustomerModal()">
+                      <i class="fas fa-plus"></i> Add Customer
+                    </button>
+                  </div>
+                </div>
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0" id="customersTable">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Name</th>
+                          <th>Phone</th>
+                          <th>Email</th>
+                          <th>Orders</th>
+                          <th>Total Spent</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- INVENTORY PAGE -->
+        <div id="inventory" class="page">
+          <div class="row g-4">
+            <div class="col-12">
+              <div class="alert alert-inventory mb-4">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                  <strong>Inventory Alert System:</strong> Low stock warnings trigger at <strong>10 units above</strong> the minimum level. If minimum is 50, you'll be alerted when stock reaches 60 or below.
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="kpi-card">
+                <div class="kpi-icon kpi-orange">
+                  <i class="fas fa-boxes"></i>
+                </div>
+                <div class="kpi-info">
+                  <span class="kpi-label">Total Ingredients</span>
+                  <h3 class="kpi-value" id="totalIngredients">0</h3>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="kpi-card">
+                <div class="kpi-icon kpi-yellow">
+                  <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="kpi-info">
+                  <span class="kpi-label">Low Stock Alert</span>
+                  <h3 class="kpi-value" id="lowStockIngredients">0</h3>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="kpi-card">
+                <div class="kpi-icon kpi-orange">
+                  <i class="fas fa-times-circle"></i>
+                </div>
+                <div class="kpi-info">
+                  <span class="kpi-label">Wasted Items</span>
+                  <h3 class="kpi-value" id="wastedItemsCount">0</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row g-4 mt-2">
+            <div class="col-12">
+              <div class="card dashboard-card">
+                <div class="card-header">
+                  <h5><i class="fas fa-boxes"></i> Inventory List</h5>
+                  <div class="header-actions">
+                    <select class="form-select form-select-sm me-2" id="inventoryCategoryFilter" style="width:150px">
+                      <option value="">All Categories</option>
+                      <option value="Meat">Meat</option>
+                      <option value="Vegetable">Vegetable</option>
+                      <option value="Dairy">Dairy</option>
+                      <option value="Beverage">Beverage</option>
+                      <option value="Bakery">Bakery</option>
+                      <option value="Sauce">Sauce</option>
+                    </select>
+                    <input type="text" class="form-control form-control-sm me-2" id="inventorySearch" placeholder="Search inventory..." style="width:200px">
+                    <button class="btn btn-primary btn-sm" onclick="openAddInventoryModal()">
+                      <i class="fas fa-plus"></i> Add Item
+                    </button>
+                  </div>
+                </div>
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0" id="inventoryTable">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Ingredient</th>
+                          <th>Category</th>
+                          <th>Stock</th>
+                          <th>Min Level</th>
+                          <th>Alert At</th>
+                          <th>Cost</th>
+                          <th>Supplier</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUPPLIERS PAGE -->
+        <div id="suppliers" class="page">
+          <div class="row g-4">
+            <div class="col-12">
+              <div class="card dashboard-card">
+                <div class="card-header">
+                  <h5><i class="fas fa-truck"></i> Suppliers</h5>
+                  <div class="header-actions">
+                    <input type="text" class="form-control form-control-sm me-2" id="supplierSearch" placeholder="Search suppliers..." style="width:200px">
+                    <button class="btn btn-primary btn-sm" onclick="openAddSupplierModal()">
+                      <i class="fas fa-plus"></i> Add Supplier
+                    </button>
+                  </div>
+                </div>
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0" id="suppliersTable">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Supplier Name</th>
+                          <th>Contact Person</th>
+                          <th>Address</th>
+                          <th>Items Supplied</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PURCHASES PAGE -->
+        <div id="purchases" class="page">
+          <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+              <div class="kpi-card">
+                <div class="kpi-icon kpi-orange">
+                  <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="kpi-info">
+                  <span class="kpi-label">Total Purchases</span>
+                  <h3 class="kpi-value" id="totalPurchasesCount">0</h3>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <div class="kpi-card">
+                <div class="kpi-icon kpi-yellow">
+                  <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <div class="kpi-info">
+                  <span class="kpi-label">Total Spent</span>
+                  <h3 class="kpi-value" id="totalPurchaseAmount">Rp 0</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row g-4 mt-2">
+            <div class="col-12">
+              <div class="card dashboard-card">
+                <div class="card-header">
+                  <h5><i class="fas fa-shopping-cart"></i> Supplier Purchases</h5>
+                  <div class="header-actions">
+                    <input type="text" class="form-control form-control-sm me-2" id="purchaseSearch" placeholder="Search purchases..." style="width:200px">
+                    <button class="btn btn-primary btn-sm" onclick="openAddPurchaseModal()">
+                      <i class="fas fa-plus"></i> New Purchase
+                    </button>
+                  </div>
+                </div>
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0" id="purchasesTable">
+                      <thead>
+                        <tr>
+                          <th>Purchase ID</th>
+                          <th>Supplier</th>
+                          <th>Items</th>
+                          <th>Total Cost</th>
+                          <th>Date</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MENU PAGE -->
+        <div id="menu" class="page">
+          <div class="row g-4">
+            <div class="col-12">
+              <div class="card dashboard-card">
+                <div class="card-header">
+                  <h5><i class="fas fa-hamburger"></i> Menu Items</h5>
+                  <div class="header-actions">
+                    <input type="text" class="form-control form-control-sm me-2" id="menuSearch" placeholder="Search menu..." style="width:200px">
+                    <button class="btn btn-primary btn-sm" onclick="openAddMenuModal()">
+                      <i class="fas fa-plus"></i> Add Menu Item
+                    </button>
+                  </div>
+                </div>
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0" id="menuTable">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Combo Item</th>
+                          <th>Description</th>
+                          <th>Price</th>
+                          <th>Orders</th>
+                          <th>Revenue</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROMOTIONS PAGE -->
+        <div id="promotions" class="page">
+          <div class="row g-4">
+            <div class="col-12">
+              <div class="card dashboard-card">
+                <div class="card-header">
+                  <h5><i class="fas fa-tag"></i> Promotions</h5>
+                  <div class="header-actions">
+                    <select class="form-select form-select-sm me-2" id="promoStatusFilter" style="width:150px">
+                      <option value="">All</option>
+                      <option value="1">Active</option>
+                      <option value="0">Inactive</option>
+                    </select>
+                    <button class="btn btn-primary btn-sm" onclick="openAddPromotionModal()">
+                      <i class="fas fa-plus"></i> Add Promotion
+                    </button>
+                  </div>
+                </div>
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0" id="promotionsTable">
+                      <thead>
+                        <tr>
+                          <th>Promo Code</th>
+                          <th>Discount</th>
+                          <th>Start Date</th>
+                          <th>End Date</th>
+                          <th>Status</th>
+                          <th>Usage</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORDER STATUS EDIT MODAL -->
+  <div class="modal fade" id="orderStatusModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Update Order Status</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="orderStatusForm">
+            <input type="hidden" id="editOrderNumber">
+            <div class="mb-3">
+              <label class="form-label">Order Number</label>
+              <input type="text" class="form-control" id="editOrderNumDisplay" readonly>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Current Status</label>
+              <input type="text" class="form-control" id="editCurrentStatus" readonly>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">New Status</label>
+              <select class="form-select" id="editNewStatus" required>
+                <option value="Pending">Pending</option>
+                <option value="Preparing">Preparing</option>
+                <option value="Completed">Completed</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="saveOrderStatus()">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD/EDIT ORDER MODAL -->
+  <div class="modal fade" id="orderModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="orderModalTitle">Add Order</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="orderForm">
+            <input type="hidden" id="orderFormId">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Customer</label>
+                <select class="form-select" id="orderCustomer" required>
+                  <option value="">Select Customer</option>
+                </select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Store</label>
+                <select class="form-select" id="orderStore" required>
+                  <option value="S001">Store 001</option>
+                  <option value="S002">Store 002</option>
+                  <option value="S003">Store 003</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Promotion (optional)</label>
+                <select class="form-select" id="orderPromo">
+                  <option value="">No Promotion</option>
+                </select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Status</label>
+                <select class="form-select" id="orderStatusInput" required>
+                  <option value="Pending">Pending</option>
+                  <option value="Preparing">Preparing</option>
+                  <option value="Completed">Completed</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+              </div>
+            </div>
+            <hr>
+            <h6>Order Items</h6>
+            <div id="orderItemsContainer">
+              <div class="order-item-row row align-items-end">
+                <div class="col-md-6 mb-2">
+                  <label class="form-label">Menu Item</label>
+                  <select class="form-select order-item-menu" required>
+                    <option value="">Select Item</option>
+                  </select>
+                </div>
+                <div class="col-md-4 mb-2">
+                  <label class="form-label">Quantity</label>
+                  <input type="number" class="form-control order-item-qty" value="1" min="1" required>
+                </div>
+                <div class="col-md-2 mb-2">
+                  <button type="button" class="btn btn-danger btn-sm" onclick="removeOrderItemRow(this)" disabled>
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="addOrderItemRow()">
+              <i class="fas fa-plus"></i> Add Item
+            </button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="saveOrder()">Save Order</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD/EDIT CREW MODAL -->
+  <div class="modal fade" id="crewModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="crewModalTitle">Add Crew Member</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="crewForm">
+            <input type="hidden" id="crewFormId">
+            <div class="mb-3">
+              <label class="form-label">Name</label>
+              <input type="text" class="form-control" id="crewName" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Position</label>
+              <select class="form-select" id="crewPosition" required>
+                <option value="">Select Position</option>
+                <option value="Manager">Manager</option>
+                <option value="Cashier">Cashier</option>
+                <option value="Cook">Cook</option>
+                <option value="Server">Server</option>
+                <option value="Delivery">Delivery</option>
+                <option value="Cleaner">Cleaner</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Phone Number</label>
+              <input type="tel" class="form-control" id="crewPhone" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Store</label>
+              <select class="form-select" id="crewStore" required>
+                <option value="S001">Store 001</option>
+                <option value="S002">Store 002</option>
+                <option value="S003">Store 003</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Schedule</label>
+              <select class="form-select" id="crewSchedule" required>
+                <option value="">Select Schedule</option>
+                <option value="Morning (06:00 - 14:00)">Morning (06:00 - 14:00)</option>
+                <option value="Afternoon (14:00 - 22:00)">Afternoon (14:00 - 22:00)</option>
+                <option value="Night (22:00 - 06:00)">Night (22:00 - 06:00)</option>
+                <option value="Full Day (08:00 - 20:00)">Full Day (08:00 - 20:00)</option>
+                <option value="Weekend Only">Weekend Only</option>
+                <option value="Flexible">Flexible</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="saveCrew()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD/EDIT CUSTOMER MODAL -->
+  <div class="modal fade" id="customerModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="customerModalTitle">Add Customer</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="customerForm">
+            <input type="hidden" id="customerFormId">
+            <div class="mb-3">
+              <label class="form-label">Name</label>
+              <input type="text" class="form-control" id="customerName" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Phone Number</label>
+              <input type="tel" class="form-control" id="customerPhone" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" id="customerEmail">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="saveCustomer()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD/EDIT INVENTORY MODAL -->
+  <div class="modal fade" id="inventoryModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="inventoryModalTitle">Add Inventory Item</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="inventoryForm">
+            <input type="hidden" id="inventoryFormId">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Ingredient Name</label>
+                <input type="text" class="form-control" id="invName" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Category</label>
+                <select class="form-select" id="invCategory" required>
+                  <option value="">Select Category</option>
+                  <option value="Meat">Meat</option>
+                  <option value="Vegetable">Vegetable</option>
+                  <option value="Dairy">Dairy</option>
+                  <option value="Beverage">Beverage</option>
+                  <option value="Bakery">Bakery</option>
+                  <option value="Sauce">Sauce</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Current Stock</label>
+                <input type="number" class="form-control" id="invStock" required>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Min Level</label>
+                <input type="number" class="form-control" id="invMinLevel" required>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Cost (Rp)</label>
+                <input type="number" class="form-control" id="invCost" required>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Supplier</label>
+              <select class="form-select" id="invSupplier" required>
+                <option value="">Select Supplier</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="saveInventory()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD/EDIT SUPPLIER MODAL -->
+  <div class="modal fade" id="supplierModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="supplierModalTitle">Add Supplier</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="supplierForm">
+            <input type="hidden" id="supplierFormId">
+            <div class="mb-3">
+              <label class="form-label">Supplier Name</label>
+              <input type="text" class="form-control" id="supplierName" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Contact Person</label>
+              <input type="text" class="form-control" id="supplierContact" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Address</label>
+              <textarea class="form-control" id="supplierAddress" rows="3" required></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="saveSupplier()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD PURCHASE MODAL -->
+  <div class="modal fade" id="purchaseModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">New Purchase Order</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="purchaseForm">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Supplier</label>
+                <select class="form-select" id="purchaseSupplier" required>
+                  <option value="">Select Supplier</option>
+                </select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Purchase Date</label>
+                <input type="date" class="form-control" id="purchaseDate" required>
+              </div>
+            </div>
+            <hr>
+            <h6>Items</h6>
+            <div id="purchaseItemsContainer">
+              <div class="purchase-item-row row align-items-end">
+                <div class="col-md-5 mb-2">
+                  <label class="form-label">Ingredient</label>
+                  <select class="form-select purchase-item-ing" required>
+                    <option value="">Select Ingredient</option>
+                  </select>
+                </div>
+                <div class="col-md-3 mb-2">
+                  <label class="form-label">Quantity</label>
+                  <input type="number" class="form-control purchase-item-qty" value="1" min="1" required>
+                </div>
+                <div class="col-md-3 mb-2">
+                  <label class="form-label">Cost (Rp)</label>
+                  <input type="number" class="form-control purchase-item-cost" required>
+                </div>
+                <div class="col-md-1 mb-2">
+                  <button type="button" class="btn btn-danger btn-sm" onclick="removePurchaseItemRow(this)" disabled>
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="addPurchaseItemRow()">
+              <i class="fas fa-plus"></i> Add Item
+            </button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="savePurchase()">Save Purchase</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD/EDIT MENU MODAL -->
+  <div class="modal fade" id="menuModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="menuModalTitle">Add Menu Item</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="menuForm">
+            <input type="hidden" id="menuFormId">
+            <div class="mb-3">
+              <label class="form-label">Combo Item Name</label>
+              <input type="text" class="form-control" id="menuComboItem" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Description</label>
+              <textarea class="form-control" id="menuDescription" rows="3" required></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Price (Rp)</label>
+              <input type="number" class="form-control" id="menuPrice" required>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="saveMenu()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD/EDIT PROMOTION MODAL -->
+  <div class="modal fade" id="promotionModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="promotionModalTitle">Add Promotion</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="promotionForm">
+            <input type="hidden" id="promotionFormId">
+            <div class="mb-3">
+              <label class="form-label">Promo Code</label>
+              <input type="text" class="form-control" id="promoCode" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Discount Amount (Rp)</label>
+              <input type="number" class="form-control" id="promoDiscount" required>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Start Date</label>
+                <input type="date" class="form-control" id="promoStart" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">End Date</label>
+                <input type="date" class="form-control" id="promoEnd" required>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Active</label>
+              <select class="form-select" id="promoActive">
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="savePromotion()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW ORDER DETAILS MODAL -->
+  <div class="modal fade" id="orderDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Order Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body" id="orderDetailsBody"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="notificationToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <i class="fas fa-bell me-2 text-warning"></i>
+        <strong class="me-auto">Quantom</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body" id="toastMessage"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="assets/js/script.js"></script>
+</body>
+</html>
